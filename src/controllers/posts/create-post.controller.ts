@@ -1,5 +1,7 @@
 import { Response } from "express";
 import { CustomRequest } from "../../server";
+import { PostService } from "../../services/post.services";
+import { CategoriesService } from "../../services/categories.service";
 
 export let createPostController = async (
   req: CustomRequest | any,
@@ -8,15 +10,15 @@ export let createPostController = async (
   let title = req.body.title;
   let content = req.body.content;
   let categoryId = req.body.categoryId;
-  let response: any = await req.db.query(`
-  select * from categories where id = ${categoryId}`);
 
-  if (response && response[0].length < 1) {
+  let category: any = await CategoriesService.getCategoryId(categoryId);
+
+  // ako ne postoji kategorija onda error = ->>
+  if (!category) {
     return res.send("This category doesn not exist");
   }
 
-  let query = `insert into posts (title, content, categoryId) values('${title}', '${content}', ${categoryId})`;
-  await req.db.query(query);
+  await PostService.createPost({ title, content, categoryId });
 
   res.send("Post has been created succesfully");
 };

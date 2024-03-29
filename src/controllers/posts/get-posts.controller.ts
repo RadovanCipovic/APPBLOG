@@ -1,7 +1,9 @@
 import { Response } from "express";
 import { CustomRequest } from "../../server";
+import { PostService } from "../../services/post.services";
 
 export let getPostController = async (req: CustomRequest, res: Response) => {
-  let response = await req.db.query(`select * from posts`);
-  res.send(response[0]);
+  let posts = await PostService.getPosts();
+
+  res.send(posts);
 };

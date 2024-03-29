@@ -1,11 +1,11 @@
 import { Response } from "express";
 import { CustomRequest } from "../../server";
+import { CategoriesService } from "../../services/categories.service";
 
 export let getCategoryController = async (
   req: CustomRequest | any,
   res: Response
 ) => {
-  let response = await req.db.query(`select * from categories`);
-
-  res.send(response[0]);
+  let categories = await CategoriesService.getCategories();
+  res.send(categories);
 };
